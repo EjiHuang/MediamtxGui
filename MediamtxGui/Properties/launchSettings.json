@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "MediamtxGui (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "MediamtxGui (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
