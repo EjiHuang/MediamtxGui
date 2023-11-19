@@ -1,38 +1,79 @@
+using CommunityToolkit.Mvvm.DependencyInjection;
+using MediamtxGui.Controls;
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using Windows.Graphics;
+using WinRT.Interop;
+using static MediamtxGui.Interop.Interop.Comctl32;
 
 namespace MediamtxGui
 {
-    /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainWindow : Window
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         public XamlRoot XamlRoot => Content.XamlRoot;
+        private readonly ContentDialogService _contentDialogService;
 
         public MainWindow()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+            InitializeWindow();
+
+            _contentDialogService = Ioc.Default.GetRequiredService<ContentDialogService>();
         }
 
-        private void myButton_Click(object sender, RoutedEventArgs e)
+        #region Window initialization
+
+        private const string WindowTitle = "Mediamtx gui version 1.0.0";
+        private const int StartupWidth = 1600;
+        private const int StartupHeight = 900;
+
+        private const int WM_CLOSE = 0x0010;
+        private SUBCLASSPROC? _subClassDelegate;
+
+        public IntPtr Hwnd { get; private set; }
+        private AppWindow? _appWindow;
+
+        private void InitializeWindow()
         {
-            myButton.Content = "Clicked";
+            Title = WindowTitle;
+
+            Hwnd = WindowNative.GetWindowHandle(this);
+            _subClassDelegate = new SUBCLASSPROC(WindowSubClass);
+            bool bReturn = SetWindowSubclass(Hwnd, _subClassDelegate, UIntPtr.Zero, UIntPtr.Zero);
+
+            var windowId = Win32Interop.GetWindowIdFromWindow(Hwnd);
+            _appWindow = AppWindow.GetFromWindowId(windowId);
+            _appWindow.ResizeClient(new SizeInt32(StartupWidth, StartupHeight));
         }
+
+        private IntPtr WindowSubClass(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, UIntPtr uIdSubclass, UIntPtr dwRefData)
+        {
+            switch (msg)
+            {
+                case WM_CLOSE:
+                    {
+                        CloseWindow();
+                        return IntPtr.Zero;
+                    }
+            }
+
+            return DefSubclassProc(hWnd, msg, wParam, lParam);
+        }
+
+        private async void CloseWindow()
+        {
+            var result = await _contentDialogService.ShowYesNoMessageDialog(WindowTitle, "Are you sure you want to close?");
+            if (result == Microsoft.UI.Xaml.Controls.ContentDialogResult.Primary)
+            {
+                logger.Info("App closed normally.");
+                Close();
+            }
+        }
+
+        #endregion
     }
 }

@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Messaging;
 using EjiLib.Core.Threading;
 using MediamtxGui.Controls;
+using MediamtxGui.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MediamtxGui.Core
@@ -24,7 +25,7 @@ namespace MediamtxGui.Core
             .AddSingleton<ContentDialogService>()
             .AddSingleton<TaskContext>()
             //.AddSingleton<ConfigFileService>()
-            //.AddSingleton<MainViewModel>()
+            .AddSingleton<MainPageModel>()
 
             // Discrete services
             .AddSingleton<IMessenger, WeakReferenceMessenger>()
