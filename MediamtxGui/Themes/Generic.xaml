@@ -3,15 +3,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:MediamtxGui">
 
-    <Style TargetType="local:OutputControl" >
+    <Style xmlns:local2="using:MediamtxGui.Controls" TargetType="local2:VideoViewBase">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="local:OutputControl">
-                    <Border
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}">
-                    </Border>
+                <ControlTemplate TargetType="local2:VideoViewBase">
+                    <SwapChainPanel x:Name="SwapChainPanel" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
