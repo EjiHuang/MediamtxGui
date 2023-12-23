@@ -28,8 +28,8 @@ namespace MediamtxGui
         #region Window initialization
 
         private const string WindowTitle = "Mediamtx gui version 1.0.0";
-        private const int StartupWidth = 1600;
-        private const int StartupHeight = 900;
+        private const int StartupWidth = 640;
+        private const int StartupHeight = 500;
 
         private const int WM_CLOSE = 0x0010;
         private SUBCLASSPROC? _subClassDelegate;

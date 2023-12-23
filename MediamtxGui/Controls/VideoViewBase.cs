@@ -52,11 +52,11 @@ namespace MediamtxGui.Controls
             {
                 if (_loaded)
                 {
-                    UpdateSize();
+                    //UpdateSize();
                 }
                 else
                 {
-                    CreateSwapChain();
+                    //CreateSwapChain();
                 }
             };
 
@@ -64,7 +64,7 @@ namespace MediamtxGui.Controls
             {
                 if (_loaded)
                 {
-                    UpdateScale();
+                    //UpdateScale();
                 }
             };
         }
