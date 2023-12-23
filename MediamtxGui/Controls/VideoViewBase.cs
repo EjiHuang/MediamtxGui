@@ -111,6 +111,37 @@ namespace MediamtxGui.Controls
             }
         }
 
+        /// <summary>
+        /// Called when the video view is fully loaded
+        /// </summary>
+        protected abstract void OnInitialized();
+
+        /// <summary>
+        /// Initializes the SwapChain
+        /// </summary>
+        void CreateSwapChain()
+        {
+            // Do not create the swapchain when the VideoView is collapsed.
+            if (_panel == null || _panel.ActualHeight == 0)
+                return;
+
+            SharpDX.DXGI.Factory2? dxgiFactory = null;
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                DestroySwapChain();
+                if (ex is SharpDXException)
+                {
+                    throw new Exception("SharpDX operation failed, see InnerException for details", ex);
+                }
+
+                throw;
+            }
+        }
+
         private void DestroySwapChain()
         {
             _swapChain2?.Dispose();
